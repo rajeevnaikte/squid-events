@@ -22,32 +22,31 @@ import React from 'react'
 import { subscribe, unsubscribe } from 'rn-event-observable'
 
 class BootstrapAlert extends React.Component {
-	constructor() {
-		super();
-		this.state = {type: '', message: ''};
-	}
-	componentDidMount() {
-		window.$E.subscribe(this);
-	}
-	componentWillUnmount() {
-		window.$E.unsubscribe(this);
-	}
-	events() {
-		return['alert-success', 'alert-fail'];
-	}
-	alertSuccess(data) {
-		this.setState({type: 'success', message: data});
-	}
-	alertFail(data) {
-		this.setState({type: 'danger', message: data});
-	}
+  constructor() {
+  	super();
+  	this.state = {type: '', message: ''};
+  }
+  componentDidMount() {
+  	subscribe(this);
+  }
+  componentWillUnmount() {
+  	unsubscribe(this);
+  }
+  events() {
+  	return['alert-success', 'alert-fail'];
+  }
+  alertSuccess(data) {
+  	this.setState({type: 'success', message: data});
+  }
+  alertFail(data) {
+  	this.setState({type: 'danger', message: data});
+  }
   render() {
     return <div className={`alert alert-${this.state.type} alert-dismissible`}>
-					<a className="close" aria-label="close">&times;</a>{this.state.message}
-				</div>;
+		<a className="close" aria-label="close">&times;</a>{this.state.message}
+	</div>;
   }
 }
-export defaul BootstrapAlert
 
 //App.js
 import { events } from 'rn-event-observable'
