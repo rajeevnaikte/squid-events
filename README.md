@@ -33,7 +33,7 @@ class BootstrapAlert extends React.Component {
   	unsubscribe(this);
   }
   events() {
-  	return['alert-success', 'alert-fail'];
+  	return['alert-success', {event: 'alert-fail', priority: 1}];
   }
   alertSuccess(data) {
   	this.setState({type: 'success', message: data});
