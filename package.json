@@ -1,0 +1,29 @@
+{
+  "name": "rn-event-observable",
+  "version": "1.0.0",
+  "description": "Event Observer utility for JS classes",
+  "main": "index.js",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1"
+  },
+  "scripts": {
+    "test": "echo \"swagger2-client\" && exit 0",
+    "build": "babel EventObservable.js --out-file index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rajeevnaikte/rn-event-observable.git"
+  },
+  "keywords": [
+    "event",
+    "observer",
+    "observable"
+  ],
+  "author": "Rajeev Naik",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rajeevnaikte/rn-event-observable/issues"
+  },
+  "homepage": "https://github.com/rajeevnaikte/rn-event-observable#readme"
+}
