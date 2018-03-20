@@ -1,6 +1,6 @@
 {
   "name": "rn-event-observable",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Event Observer utility for JS classes",
   "main": "index.js",
   "devDependencies": {
