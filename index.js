@@ -134,7 +134,7 @@ var setupPostFire = function setupPostFire(func) {
 	setupPrePostConsumer('postFire', func);
 };
 
-var subscribeFor = function subscribeFor(eventDesc, classInstance) {
+var subscribeForEvent = function subscribeForEvent(eventDesc, classInstance) {
 	var priority = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'z';
 
 	requiresNotNull(eventDesc, 'event');
@@ -176,7 +176,7 @@ var subscribe = function subscribe(classInstance) {
 				_eventName = event.event;
 				priority = event.priority;
 			}
-			subscribeFor(_eventName, classInstance, priority);
+			subscribeForEvent(_eventName, classInstance, priority);
 		}
 	} catch (err) {
 		_didIteratorError2 = true;
