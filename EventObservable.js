@@ -94,7 +94,7 @@ const setupPostFire = (func) => {
 	setupPrePostConsumer('postFire', func);
 };
 
-const subscribeFor = (eventDesc, classInstance, priority='z') => {
+const subscribeForEvent = (eventDesc, classInstance, priority='z') => {
 	requiresNotNull(eventDesc, 'event');
 	verifyDataType(eventDesc, 'string', 'event');
 	let event = camelize(eventDesc);
@@ -127,7 +127,7 @@ const subscribe = (classInstance) => {
 			eventName = event.event;
 			priority = event.priority;
 		}
-		subscribeFor(eventName, classInstance, priority);
+		subscribeForEvent(eventName, classInstance, priority);
 	}
 }
 
