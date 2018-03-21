@@ -25,24 +25,24 @@ const events = {};
 let classInstanceRef = [];
 
 class Event {
-	constructor(event, eventDesc) {
+	constructor(eventName, eventDesc) {
 		this.handler = {};
 		this.eventName = eventName;
 		this.eventDesc = eventDesc;
 	}
 	
 	fire() {
-		preFire(this.eventDesc);
+		this.preFire(this.eventDesc);
 		for (let priority in this.handler) {
-			preFirePerPriority(this.eventDesc, priority);
+			this.preFirePerPriority(this.eventDesc, priority);
 			for (let classInstance of this.handler[priority]) {
-				preFirePerClass(this.eventDesc, priority, classInstance);
+				this.preFirePerClass(this.eventDesc, priority, classInstance);
 				classInstance[this.eventName](...arguments);
-				postFirePerClass(this.eventDesc, priority, classInstance);
+				this.postFirePerClass(this.eventDesc, priority, classInstance);
 			}
-			postFirePerPriority(this.eventDesc, priority);
+			this.postFirePerPriority(this.eventDesc, priority);
 		}
-		postFire(this.eventDesc);
+		this.postFire(this.eventDesc);
 		return events;
 	}
 

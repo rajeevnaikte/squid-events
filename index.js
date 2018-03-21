@@ -35,7 +35,7 @@ var events = {};
 var classInstanceRef = [];
 
 var Event = function () {
-	function Event(event, eventDesc) {
+	function Event(eventName, eventDesc) {
 		_classCallCheck(this, Event);
 
 		this.handler = {};
@@ -46,9 +46,9 @@ var Event = function () {
 	_createClass(Event, [{
 		key: 'fire',
 		value: function fire() {
-			preFire(this.eventDesc);
+			this.preFire(this.eventDesc);
 			for (var priority in this.handler) {
-				preFirePerPriority(this.eventDesc, priority);
+				this.preFirePerPriority(this.eventDesc, priority);
 				var _iteratorNormalCompletion = true;
 				var _didIteratorError = false;
 				var _iteratorError = undefined;
@@ -57,9 +57,9 @@ var Event = function () {
 					for (var _iterator = this.handler[priority][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 						var classInstance = _step.value;
 
-						preFirePerClass(this.eventDesc, priority, classInstance);
+						this.preFirePerClass(this.eventDesc, priority, classInstance);
 						classInstance[this.eventName].apply(classInstance, arguments);
-						postFirePerClass(this.eventDesc, priority, classInstance);
+						this.postFirePerClass(this.eventDesc, priority, classInstance);
 					}
 				} catch (err) {
 					_didIteratorError = true;
@@ -76,9 +76,9 @@ var Event = function () {
 					}
 				}
 
-				postFirePerPriority(this.eventDesc, priority);
+				this.postFirePerPriority(this.eventDesc, priority);
 			}
-			postFire(this.eventDesc);
+			this.postFire(this.eventDesc);
 			return events;
 		}
 	}, {
@@ -167,16 +167,16 @@ var subscribe = function subscribe(classInstance) {
 		for (var _iterator2 = classInstance.events()[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
 			var event = _step2.value;
 
-			var _eventName = void 0,
+			var eventName = void 0,
 			    priority = void 0;
 			if (typeof event === 'string') {
-				_eventName = event;
+				eventName = event;
 				priority = 'z';
 			} else {
-				_eventName = event.event;
+				eventName = event.event;
 				priority = event.priority;
 			}
-			subscribeForEvent(_eventName, classInstance, priority);
+			subscribeForEvent(eventName, classInstance, priority);
 		}
 	} catch (err) {
 		_didIteratorError2 = true;
