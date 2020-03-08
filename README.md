@@ -19,7 +19,7 @@ JavaScript utility to subscribe and fire events for JavaScript classes.
 ```
 //BootstrapAlert.js
 import React from 'react'
-import { subscribe, unsubscribe } from 'rn-event-observable'
+import { subscribe, unsubscribe } from 'squid-events'
 
 class BootstrapAlert extends React.Component {
   constructor() {
@@ -49,7 +49,7 @@ class BootstrapAlert extends React.Component {
 }
 
 //App.js
-import { events } from 'rn-event-observable'
+import { events } from 'squid-events'
 
 if (loaded) {
   events.alertSuccess.fire('Successfully loaded');
