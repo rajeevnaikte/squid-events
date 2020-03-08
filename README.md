@@ -1,4 +1,4 @@
-# rn-event-observable
+# squid-events
 JavaScript utility to subscribe and fire events for JavaScript classes.
 
 # APIs
