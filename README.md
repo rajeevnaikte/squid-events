@@ -3,7 +3,8 @@ JavaScript utility to subscribe and fire events for JavaScript classes.
 
 # APIs
 - subscribe(classInstance) : all events returned by 'events()' method of the class instance will be subscribed. 
--	subscribeForEvent(eventName, classInstance[, priority]) : Given event for the class will be subscribed. Optionally priority can be defined.
+-	subscribeForEvent(eventName, classInstance[, priority]) : Class instance will be subscribed for the event. Optionally priority can be defined.
+-	waitInQueueForEvent(eventName, classInstance[, priority]) : Class instance will be put in queue, and once the event is fired then this class will be removed from the queue. Optionally priority can be defined.
 -	events : object holding all events registered. Each event has methods - fire and fireAsync (see usage below)
 -	fire(event, ...args) : fire given event
 -	fireAsync(event, ...args) : fire given event asynchronously

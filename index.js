@@ -39,6 +39,7 @@ var Event = function () {
 		_classCallCheck(this, Event);
 
 		this.handler = {};
+		this.queued = {};
 		this.eventName = eventName;
 		this.eventDesc = eventDesc;
 	}
@@ -78,6 +79,16 @@ var Event = function () {
 
 				this.postFirePerPriority(this.eventDesc, priority);
 			}
+
+			for (var _priority in this.queued) {
+				if (this.queued[_priority].length > 0) {
+					var _classInstance = this.queued[_priority][0];
+					this.queued[_priority].shift();
+					_classInstance[this.eventName].apply(_classInstance, arguments);
+					break;
+				}
+			}
+
 			this.postFire(this.eventDesc);
 			return events;
 		}
@@ -134,8 +145,9 @@ var setupPostFire = function setupPostFire(func) {
 	setupPrePostConsumer('postFire', func);
 };
 
-var subscribeForEvent = function subscribeForEvent(eventDesc, classInstance) {
+var subscribeForTheEvent = function subscribeForTheEvent(eventDesc, classInstance) {
 	var priority = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'z';
+	var holder = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'handler';
 
 	requiresNotNull(eventDesc, 'event');
 	verifyDataType(eventDesc, 'string', 'event');
@@ -147,15 +159,29 @@ var subscribeForEvent = function subscribeForEvent(eventDesc, classInstance) {
 	if (!events[event]) {
 		events[event] = new Event(event, eventDesc);
 	}
-	if (!events[event].handler[priority]) {
-		events[event].handler[priority] = [];
+	if (!events[event][holder][priority]) {
+		events[event][holder][priority] = [];
 	}
-	events[event].handler[priority].push(classInstance);
-	classInstanceRef.push({
-		'classInstance': classInstance,
-		'ref': events[event].handler[priority],
-		'i': events[event].handler[priority].length - 1
-	});
+	events[event][holder][priority].push(classInstance);
+	if (holder !== 'queued') {
+		classInstanceRef.push({
+			'classInstance': classInstance,
+			'ref': events[event][holder][priority],
+			'i': events[event][holder][priority].length - 1
+		});
+	}
+};
+
+var subscribeForEvent = function subscribeForEvent(eventDesc, classInstance) {
+	var priority = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'z';
+
+	subscribeForTheEvent(eventDesc, classInstance, priority);
+};
+
+var waitInQueueForEvent = function waitInQueueForEvent(eventDesc, classInstance) {
+	var priority = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'z';
+
+	subscribeForTheEvent(eventDesc, classInstance, priority, 'queued');
 };
 
 var subscribe = function subscribe(classInstance) {
@@ -229,6 +255,7 @@ var fireAsync = function fireAsync(event) {
 
 exports.subscribe = subscribe;
 exports.subscribeForEvent = subscribeForEvent;
+exports.waitInQueueForEvent = waitInQueueForEvent;
 exports.events = events;
 exports.fire = fire;
 exports.fireAsync = fireAsync;

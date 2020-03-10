@@ -27,10 +27,11 @@ let classInstanceRef = [];
 class Event {
 	constructor(eventName, eventDesc) {
 		this.handler = {};
+		this.queued = {};
 		this.eventName = eventName;
 		this.eventDesc = eventDesc;
 	}
-	
+
 	fire() {
 		this.preFire(this.eventDesc);
 		for (let priority in this.handler) {
@@ -42,6 +43,16 @@ class Event {
 			}
 			this.postFirePerPriority(this.eventDesc, priority);
 		}
+
+		for (let priority in this.queued) {
+			if (this.queued[priority].length > 0) {
+				const classInstance = this.queued[priority][0]
+				this.queued[priority].shift()
+				classInstance[this.eventName](...arguments);
+				break
+			}
+		}
+
 		this.postFire(this.eventDesc);
 		return events;
 	}
@@ -50,22 +61,22 @@ class Event {
 		setTimeout(this.fire.bind(this), 0, ...arguments);
 		return events;
 	}
-	
+
 	preFire(event) {
 	}
-	
+
 	preFirePerPriority(eventDesc, priority) {
 	}
-	
+
 	preFirePerClass(eventDesc, priority, classInstance) {
 	}
-	
+
 	postFirePerClass(eventDesc, priority, classInstance) {
 	}
-	
+
 	postFirePerPriority(eventDesc, priority) {
 	}
-	
+
 	postFire(event) {
 	}
 }
@@ -94,7 +105,7 @@ const setupPostFire = (func) => {
 	setupPrePostConsumer('postFire', func);
 };
 
-const subscribeForEvent = (eventDesc, classInstance, priority='z') => {
+const subscribeForTheEvent = (eventDesc, classInstance, priority='z', holder = 'handler') => {
 	requiresNotNull(eventDesc, 'event');
 	verifyDataType(eventDesc, 'string', 'event');
 	let event = camelize(eventDesc);
@@ -105,15 +116,25 @@ const subscribeForEvent = (eventDesc, classInstance, priority='z') => {
 	if (!events[event]) {
 		events[event] = new Event(event, eventDesc);
 	}
-	if (!events[event].handler[priority]) {
-		events[event].handler[priority] = [];
+	if (!events[event][holder][priority]) {
+		events[event][holder][priority] = [];
 	}
-	events[event].handler[priority].push(classInstance);
-	classInstanceRef.push({
-			'classInstance': classInstance, 
-			'ref': events[event].handler[priority], 
-			'i': events[event].handler[priority].length-1
+	events[event][holder][priority].push(classInstance);
+	if (holder !== 'queued') {
+		classInstanceRef.push({
+			'classInstance': classInstance,
+			'ref': events[event][holder][priority],
+			'i': events[event][holder][priority].length - 1
 		});
+	}
+}
+
+const subscribeForEvent = (eventDesc, classInstance, priority='z') => {
+	subscribeForTheEvent(eventDesc, classInstance, priority)
+}
+
+const waitInQueueForEvent = (eventDesc, classInstance, priority='z') => {
+	subscribeForTheEvent(eventDesc, classInstance, priority, 'queued')
 }
 
 const subscribe = (classInstance) => {
@@ -159,6 +180,7 @@ const fireAsync = (event, ...args) => {
 export {
 	subscribe,
 	subscribeForEvent,
+	waitInQueueForEvent,
 	events,
 	fire,
 	fireAsync,
